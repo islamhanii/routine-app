@@ -1,0 +1,36 @@
+/* Center auth content */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.auth-card {
+    max-width: 400px;
+}
+
+/* Google button */
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-weight: 500;
+    padding: 12px;
+}
+
+.btn-google img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-google:hover {
+    background: #f8f9fa;
+}

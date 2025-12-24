@@ -1,0 +1,18 @@
+.todo-card {
+    max-width: 550px;
+}
+
+.todo-item {
+    cursor: grab;
+}
+
+.todo-item .drag-handle {
+    cursor: grab;
+    font-size: 20px;
+    color: #999;
+}
+
+.done {
+    text-decoration: line-through;
+    color: #999;
+}
