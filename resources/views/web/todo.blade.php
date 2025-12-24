@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Daily Tasks
+    Routine App
 @endsection
 
 @section('css')

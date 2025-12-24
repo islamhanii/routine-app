@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Sign in
+    Routine App
 @endsection
 
 @section('css')
