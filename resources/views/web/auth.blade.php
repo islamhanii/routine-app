@@ -16,7 +16,7 @@
         </p>
 
         <!-- Google Login -->
-        <a href="" class="btn btn-google w-100">
+        <a href="{{ route('google.login') }}" class="btn btn-google w-100">
             <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
             Continue with Google
         </a>
