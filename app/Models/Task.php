@@ -12,4 +12,13 @@ class Task extends Model
     {
         return $this->hasMany(DoneTask::class);
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    public static function rules()
+    {
+        return [
+            'title' => 'required|string|max:255'
+        ];
+    }
 }

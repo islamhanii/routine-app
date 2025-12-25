@@ -16,5 +16,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::put('/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
     Route::put('/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
+    Route::delete('/delete', [TaskController::class, 'delete'])->name('tasks.delete');
 });
 

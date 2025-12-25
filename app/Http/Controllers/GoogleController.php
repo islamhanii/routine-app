@@ -15,10 +15,14 @@ class GoogleController extends Controller
         return view('web.auth');
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     public function handleGoogleCallback()
     {
