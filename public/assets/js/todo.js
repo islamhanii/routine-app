@@ -89,8 +89,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ---------------- Init ---------------- */
-    const today = new Date().toISOString().slice(0, 10);
+    const now = new Date();
+    // Get YYYY-MM-DD in local Cairo time
+    const today = now.toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' });
     dateInput.value = today;
+
     loadTasks(today);
 
     /* ---------------- Events ---------------- */
