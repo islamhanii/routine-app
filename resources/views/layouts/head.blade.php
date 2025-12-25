@@ -6,6 +6,9 @@
 <!-- Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
+<!-- Toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 <!-- Custom CSS -->
 <link href="{{ URL::asset('assets/css/style.css') }}" rel="stylesheet">
 @yield('css')

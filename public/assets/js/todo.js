@@ -20,22 +20,37 @@ document.addEventListener('DOMContentLoaded', function () {
     Object.values(sounds).forEach(s => { if (s) s.volume = soundVolume; });
 
     /* ---------------- Helpers ---------------- */
-    function fetchJson(url, options = {}) {
-        return fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': config.csrf
-            },
-            ...options
-        }).then(res => res.json());
+    function notifyError(message) {
+        toastr.error(message, 'Error', { timeOut: 3000, closeButton: true });
+    }
+
+    async function fetchJson(url, options = {}) {
+        try {
+            const res = await fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': config.csrf
+                },
+                ...options
+            });
+            const data = await res.json();
+
+            if (!res.ok || data.status >= 400) {
+                notifyError(data.message || 'Something went wrong');
+                return Promise.reject(data);
+            }
+
+            return data;
+        } catch (err) {
+            notifyError('Network or server error');
+            return Promise.reject(err);
+        }
     }
 
     function loadTasks(date) {
-        fetch(`${config.routes.byDate}?date=${date}`)
-            .then(res => res.json())
+        fetchJson(`${config.routes.byDate}?date=${date}`)
             .then(res => {
                 todoList.innerHTML = '';
-
                 res.data.forEach(task => {
                     const li = document.createElement('li');
                     li.className = 'list-group-item todo-item';
@@ -69,7 +84,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     `;
                     todoList.appendChild(li);
                 });
-            });
+            })
+            .catch(() => { }); // errors already notified
     }
 
     /* ---------------- Init ---------------- */
@@ -80,15 +96,20 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ---------------- Events ---------------- */
     dateInput.addEventListener('change', () => loadTasks(dateInput.value));
 
+    // Add Task
     document.getElementById('addTaskForm').addEventListener('submit', e => {
         e.preventDefault();
+        const title = taskTitle.value.trim();
+        if (!title) return;
+
         fetchJson(config.routes.store, {
             method: 'POST',
-            body: JSON.stringify({ title: taskTitle.value })
+            body: JSON.stringify({ title })
         }).then(() => {
+            toastr.success('Task added successfully', 'Success');
             taskTitle.value = '';
             loadTasks(dateInput.value);
-        });
+        }).catch(() => { });
     });
 
     // Toggle done with sound & haptic
@@ -96,20 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!e.target.classList.contains('toggle-done')) return;
 
         const checkbox = e.target;
-
-        // Play sound
-        if (soundEnabled) {
-            if (checkbox.checked) {
-                sounds.check.currentTime = 0;
-                sounds.check.play().catch(() => { });
-            } else if (sounds.uncheck) {
-                sounds.uncheck.currentTime = 0;
-                sounds.uncheck.play().catch(() => { });
-            }
-        }
-
-        // Haptic feedback
-        if (navigator.vibrate) navigator.vibrate(checkbox.checked ? 30 : 15);
+        const previousState = !checkbox.checked; // rollback state if failed
 
         fetchJson(config.routes.toggle, {
             method: 'PUT',
@@ -118,8 +126,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 date: dateInput.value
             })
         }).then(() => {
+            // Play sound only on success
+            if (soundEnabled) {
+                if (checkbox.checked) {
+                    sounds.check.currentTime = 0;
+                    sounds.check.play().catch(() => { });
+                } else if (sounds.uncheck) {
+                    sounds.uncheck.currentTime = 0;
+                    sounds.uncheck.play().catch(() => { });
+                }
+            }
+
+            if (navigator.vibrate) navigator.vibrate(checkbox.checked ? 30 : 15);
             loadTasks(dateInput.value);
             checkCelebrate();
+        }).catch(() => {
+            // rollback checkbox
+            checkbox.checked = previousState;
         });
     });
 
@@ -142,43 +165,21 @@ document.addEventListener('DOMContentLoaded', function () {
         input.select();
     });
 
-    // Open delete popup
-    todoList.addEventListener('click', e => {
-        const deleteBtn = e.target.closest('.delete-task');
-        if (!deleteBtn) return;
-
-        taskIdToDelete = deleteBtn.dataset.id;
-        deleteModal.show();
-    });
-
-    // Confirm delete
-    document.getElementById('confirmDeleteTask').addEventListener('click', function () {
-        if (!taskIdToDelete) return;
-
-        this.disabled = true;
-
-        fetchJson(config.routes.delete, {
-            method: 'DELETE',
-            body: JSON.stringify({ task_id: taskIdToDelete })
-        }).then(() => {
-            this.disabled = false;
-            taskIdToDelete = null;
-            deleteModal.hide();
-            loadTasks(dateInput.value);
-        });
-    });
-
     function saveEdit(input) {
         const title = input.value.trim();
         if (!title) return loadTasks(dateInput.value);
 
+        const oldValue = input.value;
         fetchJson(config.routes.edit, {
             method: 'PUT',
             body: JSON.stringify({
                 task_id: input.dataset.id,
                 title
             })
-        }).then(() => loadTasks(dateInput.value));
+        }).then(() => {
+            toastr.success('Task updated successfully', 'Success');
+            loadTasks(dateInput.value);
+        }).catch(() => { input.value = oldValue; });
     }
 
     todoList.addEventListener('keydown', e => {
@@ -188,12 +189,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     todoList.addEventListener('blur', e => {
-        if (e.target.classList.contains('edit-input')) {
-            saveEdit(e.target);
-        }
+        if (e.target.classList.contains('edit-input')) saveEdit(e.target);
     }, true);
 
-    /* ---------------- Drag & Drop ---------------- */
+    // Delete task
+    todoList.addEventListener('click', e => {
+        const deleteBtn = e.target.closest('.delete-task');
+        if (!deleteBtn) return;
+        taskIdToDelete = deleteBtn.dataset.id;
+        deleteModal.show();
+    });
+
+    document.getElementById('confirmDeleteTask').addEventListener('click', function () {
+        if (!taskIdToDelete) return;
+        this.disabled = true;
+        fetchJson(config.routes.delete, {
+            method: 'DELETE',
+            body: JSON.stringify({ task_id: taskIdToDelete })
+        }).then(() => {
+            toastr.success('Task deleted successfully', 'Success');
+            this.disabled = false;
+            taskIdToDelete = null;
+            deleteModal.hide();
+            loadTasks(dateInput.value);
+        }).catch(() => { this.disabled = false; });
+    });
+
+    // Drag & Drop
     new Sortable(todoList, {
         animation: 150,
         handle: '.drag-handle',
@@ -202,11 +224,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 id: el.dataset.id,
                 priority: i + 1
             }));
-
             fetchJson(config.routes.reorder, {
                 method: 'PUT',
                 body: JSON.stringify({ order })
-            });
+            }).catch(() => { });
         }
     });
 
@@ -223,27 +244,21 @@ document.addEventListener('DOMContentLoaded', function () {
             sounds.celebrate.play().catch(() => { });
 
             const container = document.getElementById('celebration-container');
-
             const shapes = ['square', 'circle', 'triangle'];
 
             for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
 
-                // Random size
                 const size = 5 + Math.random() * 8;
                 confetti.style.width = `${size}px`;
                 confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360},70%,60%)`;
 
-                // Random color
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-
-                // Random shape
                 const shape = shapes[Math.floor(Math.random() * shapes.length)];
                 if (shape === 'circle') confetti.style.borderRadius = '50%';
                 if (shape === 'triangle') {
-                    confetti.style.width = '0';
-                    confetti.style.height = '0';
+                    confetti.style.width = '0'; confetti.style.height = '0';
                     confetti.style.borderLeft = `${size / 2}px solid transparent`;
                     confetti.style.borderRight = `${size / 2}px solid transparent`;
                     confetti.style.borderBottom = `${size}px solid ${confetti.style.backgroundColor}`;
@@ -251,13 +266,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 confetti.style.left = `${Math.random() * 100}%`;
-                confetti.style.animationDuration = `${3 + Math.random() * 1}s`; // falls in 3-4s
+                confetti.style.animationDuration = `${3 + Math.random()}s`;
                 confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
 
                 container.appendChild(confetti);
-
-                // Remove after animation
-                setTimeout(() => confetti.remove(), 4000); // matches 4s sound
+                setTimeout(() => confetti.remove(), 4000);
             }
         }
     }
