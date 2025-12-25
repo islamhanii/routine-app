@@ -13,7 +13,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks', [TaskController::class, 'tasksByDate'])->name('tasks.byDate');
     Route::post('/', [TaskController::class, 'store'])->name('tasks.store');
-    Route::post('/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
-    Route::post('/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
+    Route::put('/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+    Route::put('/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::put('/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
 });
 

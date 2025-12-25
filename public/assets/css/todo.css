@@ -16,3 +16,19 @@
     text-decoration: line-through;
     color: #999;
 }
+
+.task-title {
+    display: inline-block;
+    width: 100%;
+    cursor: text;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: inherit;
+    font-family: inherit;
+}

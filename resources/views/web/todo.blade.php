@@ -49,14 +49,22 @@
                             li.className = 'list-group-item todo-item';
                             li.dataset.id = task.id;
                             li.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="form-check">
-                                <input class="form-check-input toggle-done" type="checkbox" data-id="${task.id}" ${task.is_done ? 'checked' : ''}>
-                                <span class="${task.is_done ? 'done' : ''}">${task.title}</span>
-                            </div>
-                            <i class="bi bi-grip-vertical drag-handle"></i>
-                        </div>
-                    `;
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="form-check flex-grow-1">
+                                        <input class="form-check-input toggle-done" type="checkbox" data-id="${task.id}" ${task.is_done ? 'checked' : ''}>
+                                        <span class="task-title ${task.is_done ? 'done' : ''}" data-id="${task.id}">
+                                            ${task.title}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button class="btn btn-sm btn-outline-secondary edit-task" data-id="${task.id}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <i class="bi bi-grip-vertical drag-handle"></i>
+                                    </div>
+                                </div>
+                            `;
                             todoList.appendChild(li);
                         });
                     });
@@ -99,7 +107,7 @@
                     const date = dateInput.value;
 
                     fetch(`{{ route('tasks.toggle') }}`, {
-                        method: 'POST',
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': window.csrfToken
@@ -111,6 +119,75 @@
                     }).then(() => loadTasks(date));
                 }
             });
+
+            // Delegate edit-task event
+            todoList.addEventListener('click', function(e) {
+                const editBtn = e.target.closest('.edit-task');
+                if (!editBtn) return;
+
+                const taskId = editBtn.dataset.id;
+                const span = todoList.querySelector(`.task-title[data-id="${taskId}"]`);
+
+                // Prevent double edit
+                if (!span) return;
+
+                const oldTitle = span.textContent.trim();
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = oldTitle;
+                input.className = 'edit-input';
+                input.dataset.id = taskId;
+
+                // Replace span with input (same position)
+                span.replaceWith(input);
+                input.focus();
+                input.select();
+            });
+
+            function saveEdit(input) {
+                const taskId = input.dataset.id;
+                const newTitle = input.value.trim();
+                const date = dateInput.value;
+
+                if (!newTitle) {
+                    loadTasks(date);
+                    return;
+                }
+
+                fetch(`{{ route('tasks.edit') }}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': window.csrfToken
+                    },
+                    body: JSON.stringify({
+                        task_id: taskId,
+                        title: newTitle
+                    })
+                }).then(() => loadTasks(date));
+            }
+
+            // Enter / Esc
+            todoList.addEventListener('keydown', function(e) {
+                if (!e.target.classList.contains('edit-input')) return;
+
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveEdit(e.target);
+                }
+
+                if (e.key === 'Escape') {
+                    loadTasks(dateInput.value);
+                }
+            });
+
+            // Blur save
+            todoList.addEventListener('blur', function(e) {
+                if (e.target.classList.contains('edit-input')) {
+                    saveEdit(e.target);
+                }
+            }, true);
 
             // Drag & Drop Priority
             new Sortable(todoList, {
@@ -124,7 +201,7 @@
                         }));
 
                     fetch('{{ route('tasks.reorder') }}', {
-                        method: 'POST',
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': window.csrfToken

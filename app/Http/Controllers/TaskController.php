@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\DoneTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -47,6 +48,27 @@ class TaskController extends Controller
             'user_id' => Auth::id(),
             'title' => $request->title,
             'priority' => $maxPriority + 1,
+        ]);
+
+        return response()->json($task);
+    }
+
+    /**
+     * Edit new task (AJAX)
+     */
+    public function edit(Request $request)
+    {
+        $request->validate([
+            'task_id' => [
+                'required',
+                Rule::exists('tasks', 'id')->where('user_id', Auth::id())
+            ],
+            'title' => 'required|string|max:255'
+        ]);
+
+        $task = Task::findOrFail($request->task_id);
+        $task->update([
+            'title' => $request->title
         ]);
 
         return response()->json($task);
