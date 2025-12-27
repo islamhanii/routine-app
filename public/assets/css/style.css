@@ -9,7 +9,7 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 20px;
+    min-height: 100vh;
 }
 
 .card-box {
@@ -48,6 +48,6 @@ body {
 
 .language-switcher-wrapper {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
 }

@@ -6,9 +6,11 @@
 
 
 @section('css')
-    <link href="{{ URL::asset('assets/css/todo.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/css/todo.css') }}?v={{ filemtime(public_path('assets/css/todo.css')) }}"
+        rel="stylesheet">
     @if (app()->getLocale() == 'ar')
-        <link href="{{ URL::asset('assets/css/todo-ar.css') }}" rel="stylesheet">
+        <link href="{{ URL::asset('assets/css/todo-ar.css') }}?v={{ filemtime(public_path('assets/css/todo-ar.css')) }}"
+            rel="stylesheet">
     @endif
 @endsection
 
@@ -26,7 +28,8 @@
         <form id="addTaskForm" class="mb-3">
             @csrf
             <div class="input-group">
-                <input type="text" id="taskTitle" class="form-control" placeholder="{{ __('web.new_task_placeholder') }}" required>
+                <input type="text" id="taskTitle" class="form-control" placeholder="{{ __('web.new_task_placeholder') }}"
+                    required>
                 <button class="btn btn-primary">
                     <i class="bi bi-plus-lg"></i>
                 </button>
@@ -86,5 +89,5 @@
         };
     </script>
 
-    <script src="{{ URL::asset('assets/js/todo.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/todo.js') }}?v={{ filemtime(public_path('assets/js/todo.js')) }}"></script>
 @endsection

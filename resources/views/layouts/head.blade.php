@@ -7,5 +7,6 @@
 <!-- Toastr -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <!-- Custom CSS -->
-<link href="{{ URL::asset('assets/css/style.css') }}" rel="stylesheet">
+<link href="{{ URL::asset('assets/css/style.css') }}?v={{ filemtime(public_path('assets/css/style.css')) }}"
+    rel="stylesheet">
 @yield('css')

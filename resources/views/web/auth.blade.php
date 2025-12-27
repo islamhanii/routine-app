@@ -5,7 +5,8 @@
 @endsection
 
 @section('css')
-    <link href="{{ URL::asset('assets/css/auth.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/css/auth.css') }}?v={{ filemtime(public_path('assets/css/auth.css')) }}"
+        rel="stylesheet">
 @endsection
 
 @section('content')
