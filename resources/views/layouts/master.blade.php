@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
@@ -10,8 +10,11 @@
 </head>
 
 <body>
-    <div class="container py-5">
+    <div class="main-wrapper">
+        @include('layouts.header')
+        <div class="container py-5">
             @yield('content')
+        </div>
     </div>
 
     @include('layouts.script')

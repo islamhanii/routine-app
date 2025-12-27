@@ -1,11 +1,15 @@
 @extends('layouts.master')
 
 @section('title')
-    Routine App
+    {{ __('web.app_name') }}
 @endsection
+
 
 @section('css')
     <link href="{{ URL::asset('assets/css/todo.css') }}" rel="stylesheet">
+    @if (app()->getLocale() == 'ar')
+        <link href="{{ URL::asset('assets/css/todo-ar.css') }}" rel="stylesheet">
+    @endif
 @endsection
 
 @section('content')
@@ -14,7 +18,7 @@
     <div class="todo-card card-box shadow">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>🗓 Daily Tasks</h4>
+            <h4><span class="emoji">🗓</span> {{ __('web.daily_tasks') }}</h4>
             <input type="date" id="taskDate" class="form-control w-auto">
         </div>
 
@@ -22,7 +26,7 @@
         <form id="addTaskForm" class="mb-3">
             @csrf
             <div class="input-group">
-                <input type="text" id="taskTitle" class="form-control" placeholder="New task..." required>
+                <input type="text" id="taskTitle" class="form-control" placeholder="{{ __('web.new_task_placeholder') }}" required>
                 <button class="btn btn-primary">
                     <i class="bi bi-plus-lg"></i>
                 </button>
@@ -39,20 +43,20 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Delete Task</h5>
+                    <h5 class="modal-title">{{ __('web.delete_task') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
-                    Are you sure you want to delete this task?
+                    {{ __('web.delete_task_confirm') }}
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
+                        {{ __('web.cancel') }}
                     </button>
                     <button type="button" class="btn btn-danger" id="confirmDeleteTask">
-                        Delete
+                        {{ __('web.delete') }}
                     </button>
                 </div>
 

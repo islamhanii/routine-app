@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Routine App
+    {{ __('web.app_name') }}
 @endsection
 
 @section('css')
@@ -10,19 +10,19 @@
 
 @section('content')
     <div class="auth-card card-box shadow">
-        <h3 class="text-center mb-2">Welcome 👋</h3>
+        <h3 class="text-center mb-2">{{ __('web.welcome') }} 👋</h3>
         <p class="text-center text-muted mb-4">
-            Sign in or create an account using Google
+            {{ __('web.signin_google') }}
         </p>
 
         <!-- Google Login -->
         <a href="{{ route('google.login') }}" class="btn btn-google w-100">
             <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
-            Continue with Google
+            {{ __('web.continue_with_google') }}
         </a>
 
         <p class="text-center text-muted small mt-4">
-            By continuing, you agree to our Terms & Privacy Policy
+            {{ __('web.terms_privacy') }}
         </p>
     </div>
 @endsection

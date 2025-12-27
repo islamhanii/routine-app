@@ -1,10 +1,3 @@
-/* Center auth content */
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .auth-wrapper {
     width: 100%;
     padding: 20px;

@@ -58,7 +58,7 @@ class TaskController extends Controller
             'priority' => $maxPriority + 1
         ]);
 
-        return $this->apiResponse(201, 'task', null, $task);
+        return $this->apiResponse(201, __('messages.task_created'), null, $task);
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ class TaskController extends Controller
             'title' => $request->title
         ]);
 
-        return $this->apiResponse(200, 'task', null, $task);
+        return $this->apiResponse(200, __('messages.task_updated'), null, $task);
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ class TaskController extends Controller
             ]);
         }
 
-        return $this->apiResponse(200, 'task toggled successfully');
+        return $this->apiResponse(200, __('messages.task_toggled'));
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -114,10 +114,10 @@ class TaskController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return $this->apiResponse(500, 'something went wrong');
+            return $this->apiResponse(500, __('messages.error_occured'));
         }
 
-        return $this->apiResponse(200, 'tasks reordered successfully');
+        return $this->apiResponse(200, __('messages.tasks_reordered'));
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -127,6 +127,6 @@ class TaskController extends Controller
         $task = Task::findOrFail($request->task_id);
         $task->delete();
 
-        return $this->apiResponse(200, 'task deleted successfully');
+        return $this->apiResponse(200, __('messages.task_deleted'));
     }
 }

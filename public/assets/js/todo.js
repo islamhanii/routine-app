@@ -109,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             body: JSON.stringify({ title })
         }).then(() => {
-            toastr.success('Task added successfully', 'Success');
             taskTitle.value = '';
             loadTasks(dateInput.value);
         }).catch(() => { });
@@ -180,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 title
             })
         }).then(() => {
-            toastr.success('Task updated successfully', 'Success');
             loadTasks(dateInput.value);
         }).catch(() => { input.value = oldValue; });
     }
@@ -210,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'DELETE',
             body: JSON.stringify({ task_id: taskIdToDelete })
         }).then(() => {
-            toastr.success('Task deleted successfully', 'Success');
             this.disabled = false;
             taskIdToDelete = null;
             deleteModal.hide();

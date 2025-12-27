@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
+            'change-language' => \App\Http\Middleware\ChangeLanguage::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

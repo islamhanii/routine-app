@@ -1,0 +1,22 @@
+#taskTitle {
+    border-radius: 0 0.375rem 0.375rem 0 !important;
+}
+
+#taskTitle + button {
+    border-radius: 0.375rem 0 0 0.375rem !important;
+}
+
+.form-check {
+    padding-left: 0;
+    padding-right: 1.5em;
+}
+
+.form-check .form-check-input {
+    margin-left: 0;
+    margin-right: -1.5em;
+    float: right;
+}
+
+.modal-header .btn-close {
+    margin: calc(-.5 * var(--bs-modal-header-padding-y)) auto calc(-.5 * var(--bs-modal-header-padding-x)) calc(-.5 * var(--bs-modal-header-padding-y));
+}
