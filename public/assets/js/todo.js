@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const res = await fetch(url, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': config.csrf
+                    'X-CSRF-TOKEN': window.config.csrf
                 },
                 ...options
             });
@@ -274,4 +274,82 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
+    /*------------------------- Full Text Popup -------------------------*/
+    let activePopup = null;
+
+    todoList.addEventListener('click', e => {
+        const title = e.target.closest('.task-title');
+        if (!title) return;
+
+        // ❌ Don't show popup if editing
+        if (title.closest('.todo-item')?.querySelector('.edit-input')) return;
+
+        // ❌ Only show if text is truncated
+        if (title.scrollWidth <= title.clientWidth) return;
+
+        // Remove previous popup
+        if (activePopup) {
+            activePopup.remove();
+            activePopup = null;
+        }
+
+        // Create popup
+        const popup = document.createElement('div');
+        popup.className = 'task-popup';
+        popup.textContent = title.textContent.trim();
+        document.body.appendChild(popup);
+
+        // Get bounding rect of title
+        const rect = title.getBoundingClientRect();
+        const isRTL = getComputedStyle(title).direction === 'rtl';
+
+        let top = rect.bottom + 5; // below text
+        let left;
+
+        if (isRTL) {
+            // Position from the right edge of title
+            left = rect.right - popup.offsetWidth;
+            if (left < 5) left = 5; // prevent overflow left
+        } else {
+            left = rect.left;
+            const overflowRight = left + popup.offsetWidth - window.innerWidth;
+            if (overflowRight > 0) left -= (overflowRight + 5); // prevent overflow right
+        }
+
+        // Keep inside viewport vertically
+        const overflowBottom = top + popup.offsetHeight - window.innerHeight;
+        if (overflowBottom > 0) top = rect.top - popup.offsetHeight - 5;
+
+        popup.style.top = `${top}px`;
+        popup.style.left = `${left}px`;
+
+        activePopup = popup;
+
+        e.stopPropagation();
+    });
+
+    // Auto-close popup on edit button click
+    todoList.addEventListener('click', e => {
+        if (e.target.closest('.edit-task') && activePopup) {
+            activePopup.remove();
+            activePopup = null;
+        }
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', () => {
+        if (activePopup) {
+            activePopup.remove();
+            activePopup = null;
+        }
+    });
+
+    // Close popup on ESC
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && activePopup) {
+            activePopup.remove();
+            activePopup = null;
+        }
+    });
 });

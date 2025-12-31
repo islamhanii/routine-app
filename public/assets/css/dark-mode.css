@@ -1,0 +1,66 @@
+/* Dark Mode Colors Only */
+body {
+    background: linear-gradient(135deg, #1f1f2e, #2c2c3e);
+    color: #e0e0e0;
+}
+
+.card-box,
+.todo-card,
+.auth-card {
+    background: #2b2b3a;
+    color: #e0e0e0;
+}
+
+.language-switcher-btn {
+    background: #3a3a50;
+    color: #f0f0f0;
+}
+
+.language-switcher-btn:hover {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    color: #fff;
+    border-color: #4e54c8;
+}
+
+.switch .slider {
+    background-color: #555;
+}
+
+.switch input:checked+.slider {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+}
+
+.switch .slider:before {
+    background-color: #e0e0e0;
+}
+
+.todo-item .drag-handle {
+    color: #aaa;
+}
+
+.done {
+    color: #888;
+}
+
+.task-popup {
+    background: #3a3a50;
+    color: #f0f0f0;
+}
+
+.edit-input {
+    color: #e0e0e0;
+}
+
+.btn-google {
+    background: #3a3a50;
+    border-color: #555;
+    color: #f0f0f0;
+}
+
+.btn-google:hover {
+    background: #4e4e6a;
+}
+
+.auth-card p {
+    color: #aaa !important;
+}

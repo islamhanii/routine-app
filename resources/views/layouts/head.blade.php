@@ -10,3 +10,8 @@
 <link href="{{ URL::asset('assets/css/style.css') }}?v={{ filemtime(public_path('assets/css/style.css')) }}"
     rel="stylesheet">
 @yield('css')
+
+@if (request()->cookie('dark_mode') === 'true')
+    <link href="{{ URL::asset('assets/css/dark-mode.css') }}?v={{ filemtime(public_path('assets/css/dark-mode.css')) }}"
+        rel="stylesheet" id="darkModeCss">
+@endif

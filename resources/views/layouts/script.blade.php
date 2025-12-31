@@ -6,4 +6,17 @@
 <!-- Notify -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<!-- Custom JS -->
+<script>
+     window.config = {
+        csrf: '{{ csrf_token() }}',
+        routes: {
+            darkMode: '{{ route('dark.mode') }}',
+        },
+        styles: {
+            darkMode: '{{ asset("assets/css/dark-mode.css") }}',
+        }
+     };
+</script>
+<script src="{{ URL::asset('assets/js/main.js') }}?v={{ filemtime(public_path('assets/js/main.js')) }}"></script>
 @yield('js')

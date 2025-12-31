@@ -5,7 +5,8 @@ body {
 
 .main-wrapper {
     display: flex;
-    flex-direction: column; /* stack switcher above card */
+    flex-direction: column;
+    /* stack switcher above card */
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -26,28 +27,77 @@ body {
 
 .language-switcher-btn {
     padding: 10px 20px;
-    border-radius: 25px;               /* more rounded, pill shape */
+    border-radius: 25px;
+    /* more rounded, pill shape */
     background: #fff;
-    border: 2px solid transparent;     /* smooth hover border effect */
-    font-weight: 600;                   /* slightly bolder */
+    border: 2px solid transparent;
+    /* smooth hover border effect */
+    font-weight: 600;
+    /* slightly bolder */
     font-size: 0.95rem;
-    color: #4e54c8;                     /* theme color */
+    color: #4e54c8;
+    /* theme color */
     text-decoration: none;
     margin-left: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* subtle shadow */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    /* subtle shadow */
 }
 
 .language-switcher-btn:hover {
-    background: linear-gradient(135deg, #4e54c8, #8f94fb); /* gradient hover */
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    /* gradient hover */
     color: #fff;
     border-color: #4e54c8;
-    transform: translateY(-2px);        /* subtle lift effect */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* deeper shadow on hover */
+    transform: translateY(-2px);
+    /* subtle lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    /* deeper shadow on hover */
 }
 
 .language-switcher-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Dark Mode Toggle Button */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px; width: 26px;
+  left: 4px; bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
 }

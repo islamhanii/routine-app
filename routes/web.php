@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\GoogleController;
-use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/change-language/{locale}', [LanguageController::class, 'changeLanguage'])->name('language.change');
+Route::get('/change-language/{locale}', [MainController::class, 'changeLanguage'])->name('language.change');
+Route::put('/dark-mode', [MainController::class, 'darkMode'])->name('dark.mode');
 
 Route::middleware('change-language')->group(function () {
     Route::middleware("guest")->group(function () {

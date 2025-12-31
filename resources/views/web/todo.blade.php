@@ -72,7 +72,6 @@
     {{-- Pass routes & csrf to JS --}}
     <script>
         window.todoConfig = {
-            csrf: '{{ csrf_token() }}',
             routes: {
                 byDate: '{{ route('tasks.byDate') }}',
                 store: '{{ route('tasks.store') }}',
