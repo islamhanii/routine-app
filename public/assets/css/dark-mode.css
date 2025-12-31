@@ -34,6 +34,11 @@ body {
     background-color: #e0e0e0;
 }
 
+.todo-item {
+    background-color: #2c2c3e;
+    color: #aaa;
+}
+
 .todo-item .drag-handle {
     color: #aaa;
 }
