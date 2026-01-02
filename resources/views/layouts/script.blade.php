@@ -14,7 +14,7 @@
             darkMode: '{{ route('dark.mode') }}',
         },
         styles: {
-            darkMode: '{{ asset("assets/css/dark-mode.css") }}',
+            darkMode: '{{ asset("assets/css/dark-mode.css") }}?v={{ filemtime(public_path('assets/css/dark-mode.css')) }}',
         }
      };
 </script>
