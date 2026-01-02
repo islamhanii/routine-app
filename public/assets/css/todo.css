@@ -45,6 +45,7 @@
 /* Task Title */
 .form-check {
     width: calc(100% - 100px);
+    padding-right: 0.5em;
 }
 
 .form-check-input:checked {
