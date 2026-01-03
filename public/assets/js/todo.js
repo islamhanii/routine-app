@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* ---------------- Helpers ---------------- */
     function notifyError(message) {
-        toastr.error(message, 'Error', { timeOut: 3000, closeButton: true });
+        toastr.error(message, '', { timeOut: 3000, closeButton: true });
     }
 
     async function fetchJson(url, options = {}) {

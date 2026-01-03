@@ -28,6 +28,7 @@ class TaskController extends Controller
     public function tasksByDate(Request $request)
     {
         $date = $request->date ?? now()->toDateString();
+        $dateTime = $date . ' 23:59:59';
 
         $tasks = Task::select(
             'tasks.id',
@@ -40,6 +41,7 @@ class TaskController extends Controller
                     ->where('done_tasks.done_date', $date);
             })
             ->where('user_id', Auth::id())
+            ->where('tasks.created_at', '<=', $dateTime)
             ->orderBy('priority')
             ->get();
 

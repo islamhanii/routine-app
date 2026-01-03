@@ -13,6 +13,10 @@ body {
     min-height: 100vh;
 }
 
+#mainFooter {
+    margin-bottom: 16px;
+}
+
 .card-box {
     background: #fff;
     border-radius: 16px;

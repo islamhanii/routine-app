@@ -27,10 +27,15 @@ class ToggleTaskRequest extends FormRequest
      */
     public function rules(): array
     {
+        $dateTime = $this->date . ' 23:59:59';
+
         return [
             'task_id' => [
                 'required',
-                Rule::exists('tasks', 'id')->where('user_id', Auth::id())
+                Rule::exists('tasks', 'id')->where(function ($query) use ($dateTime) {
+                    $query->where('user_id', Auth::id())
+                        ->where('tasks.created_at', '<=', $dateTime);
+                })
             ],
             'date' => 'required|date'
         ];
